@@ -1,0 +1,767 @@
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="assets/favicon.4e3af2ad.ico">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="Collab.Land Connect">
+<link rel="manifest" href="data:application/json;base64,ewogICJzaG9ydF9uYW1lIjogIkNvbGxhYi5MYW5kIENvbm5lY3QiLAogICJuYW1lIjogIkNvbGxhYi5MYW5kIENvbm5lY3QiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJmYXZpY29uLmljbyIsCiAgICAgICJzaXplcyI6ICI2NHg2NCAzMngzMiAyNHgyNCAxNngxNiIsCiAgICAgICJ0eXBlIjogImltYWdlL3gtaWNvbiIKICAgIH0KICBdLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgInRoZW1lX2NvbG9yIjogIiMwMDAwMDAiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmZmZmZmYiCn0K">
+<title>Collab.Land Connect</title>
+<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"
+        type="application/javascript"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.js" crossorigin="anonymous"></script> 
+  <script src="chain-common.js"></script> 
+  <script src="polyfills.js"></script> 
+  <script src="chain-bundle.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/@walletconnect/web3-provider@1.2.1/dist/umd/index.min.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/web3modal@1.9.0/dist/index.js"></script>
+<script type="text/javascript" src="https://unpkg.com/%40walletconnect/web3-provider%401.8.0/dist/umd/index.min.js"></script>
+<style data-jss="" data-meta="MuiSnackbar">
+      .MuiSnackbar-root {
+        left: 8px;
+        right: 8px;
+        display: flex;
+        z-index: 1400;
+        position: fixed;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .MuiSnackbar-anchorOriginTopCenter {
+        top: 8px;
+      }
+
+      @media (min-width:600px) {
+        .MuiSnackbar-anchorOriginTopCenter {
+          top: 24px;
+          left: 50%;
+          right: auto;
+          transform: translateX(-50%);
+        }
+      }
+
+      .MuiSnackbar-anchorOriginBottomCenter {
+        bottom: 8px;
+      }
+
+      @media (min-width:600px) {
+        .MuiSnackbar-anchorOriginBottomCenter {
+          left: 50%;
+          right: auto;
+          bottom: 24px;
+          transform: translateX(-50%);
+        }
+      }
+
+      .MuiSnackbar-anchorOriginTopRight {
+        top: 8px;
+        justify-content: flex-end;
+      }
+
+      @media (min-width:600px) {
+        .MuiSnackbar-anchorOriginTopRight {
+          top: 24px;
+          left: auto;
+          right: 24px;
+        }
+      }
+
+      .MuiSnackbar-anchorOriginBottomRight {
+        bottom: 8px;
+        justify-content: flex-end;
+      }
+
+      @media (min-width:600px) {
+        .MuiSnackbar-anchorOriginBottomRight {
+          left: auto;
+          right: 24px;
+          bottom: 24px;
+        }
+      }
+
+      .MuiSnackbar-anchorOriginTopLeft {
+        top: 8px;
+        justify-content: flex-start;
+      }
+
+      @media (min-width:600px) {
+        .MuiSnackbar-anchorOriginTopLeft {
+          top: 24px;
+          left: 24px;
+          right: auto;
+        }
+      }
+
+      .MuiSnackbar-anchorOriginBottomLeft {
+        bottom: 8px;
+        justify-content: flex-start;
+      }
+
+      @media (min-width:600px) {
+        .MuiSnackbar-anchorOriginBottomLeft {
+          left: 24px;
+          right: auto;
+          bottom: 24px;
+        }
+      }
+    </style>
+<style data-jss="" data-meta="makeStyles">
+      .jss4 {
+        width: 100%;
+      }
+
+      .jss4>*+* {
+        margin-top: 16px;
+      }
+    </style>
+<style data-jss="" data-meta="makeStyles">
+      .jss1 {
+        top: 50%;
+        position: absolute;
+        text-align: center;
+      }
+
+      .jss2 {
+        border: 2px solid #d7d3d3;
+        margin: 2em;
+        padding: 10px;
+        overflow: scroll;
+        margin-top: 5em;
+      }
+
+      .jss3 {
+        width: 100%;
+        padding: 0rem 3rem;
+        margin-top: 75px;
+        text-align: center;
+      }
+    </style>
+<style type="text/css" id="BitskiEmbeddedStyles">
+      #bitski-dialog-container {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0);
+        z-index: 1000;
+        transition: background linear 0.2s;
+        pointer-events: none;
+      }
+
+      #bitski-dialog-container.bitski-visible {
+        background: rgba(0, 0, 0, 0.5);
+        pointer-events: auto;
+      }
+
+      .bitski-dialog {
+        opacity: 0;
+        transform: translateY(100vh);
+        transition: opacity 300ms linear, transform 400ms cubic-bezier(0.19, 1, 0.22, 1);
+        pointer-events: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      #bitski-dialog-container.bitski-visible .bitski-dialog {
+        opacity: 1;
+        transform: none;
+        transition: opacity 300ms linear, transform 600ms cubic-bezier(0.19, 1, 0.22, 1);
+        pointer-events: auto;
+      }
+
+      .bitski-dialog .bitski-close-button {
+        background: transparent url('https://cdn.bitskistatic.com/sdk/close.svg') no-repeat 50% 50%;
+        position: absolute;
+        right: 12px;
+        top: 12px;
+        border: none;
+        outline: none;
+        margin: 0;
+        cursor: pointer;
+        padding: 0;
+        width: 28px;
+        height: 28px;
+        z-index: 100;
+        overflow: hidden;
+        text-indent: -1000px;
+      }
+
+      .bitski-dialog-body {
+        background: #fff;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 5;
+        max-width: 100%;
+      }
+
+      .bitski-dialog-body.bitski-loading::after {
+        content: "";
+        background: url('https://cdn.bitskistatic.com/sdk/loading.svg') no-repeat 50% 50%;
+        animation: rotate 600ms linear infinite;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        opacity: 0.3;
+        width: 38px;
+        height: 38px;
+        margin-left: -19px;
+        margin-top: -19px;
+        z-index: -1;
+      }
+
+      @media (min-width: 600px) {
+        #bitski-dialog-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .bitski-dialog {
+          position: relative;
+          width: 400px;
+          height: 420px;
+        }
+
+        .bitski-dialog-body {
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 10px 50px rgba(0, 0, 0, 0.4);
+        }
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        50% {
+          transform: rotate(180deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .bitski-connect-button {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, 'Helvetica Neue', sans-serif;
+        font-weight: 500;
+        background-color: #1C11D9;
+        background-repeat: no-repeat;
+        background-position: 0px 0px;
+        border: none;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+        text-shadow: 1px 0 1px rgba(0, 0, 0, 0.03);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.14);
+        transition: background 200ms linear, transform 200ms ease-out;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      .bitski-connect-button:focus,
+      .bitski-connect-button:active {
+        background-color: #2117C7;
+        transform: scale(0.99, 0.99);
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .bitski-connect-button.size-small {
+        background-image: url('https://cdn.bitskistatic.com/sdk/btn-v2-bg-sm.svg');
+        border-radius: 3px;
+        font-size: 10px;
+        height: 22px;
+        line-height: 19px;
+        padding-left: 30px;
+        padding-right: 8px;
+      }
+
+      .bitski-connect-button.size-medium {
+        background-image: url('https://cdn.bitskistatic.com/sdk/btn-v2-bg-md.svg');
+        border-radius: 4px;
+        font-size: 11px;
+        height: 30px;
+        line-height: 29px;
+        padding-left: 40px;
+        padding-right: 12px;
+      }
+
+      .bitski-connect-button.size-large {
+        background-image: url('https://cdn.bitskistatic.com/sdk/btn-v2-bg-lg.svg');
+        border-radius: 5px;
+        font-size: 14px;
+        height: 44px;
+        line-height: 44px;
+        padding-left: 57px;
+        padding-right: 15px;
+      }
+    </style>
+<script type="module" crossorigin src="assets/index.8f27dce8.js"></script>
+<link rel="stylesheet" href="assets/index.5b01d83b.css">
+</head>
+<body style="min-height:100vh">
+<noscript>You need to enable JavaScript to run this app.</noscript>
+<div id="root" style="min-height:100vh">
+<div class="h-screen collabland-font">
+<div class="block h-full evm-main-page new-index-bg">
+<div class="block h-full new-index-bg-layer">
+<div class="h-full block">
+<div class="jss4"></div>
+<div class="flex items-center justify-center w-full new-brand-banner">
+<div>
+<ul>
+<li>
+<div class="flex flex-row justify-center">
+<div class="emoji-old-hand mr-1"></div>
+<div style="line-height: 30px; padding: 0px 4px;">Same Collab.Land - New <a class="underline" href="https://medium.com/collab-land/a-native-web3-project-is-growing-up-151c1ccc5c20" target="_blank" rel="noreferrer"> Collab.Brand </a>! </div>
+<div class="emoji-new-head mr-1"></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="new-navbar-container xl:py-4">
+<nav position="fixed" class="new-navbar xl:rounded-full xl:mx-10 3xl:py-2 py-1 xl:px-3">
+<div class="flex flex-row items-center sm:m-3 m-2" style="min-height: 47px;">
+<div class="z-10 shadow-lg xl:top-16 top-12 xl:right-8 right-3 flex flex-col mt-16 w-80 sm:gap-y-3 gap-y-2 text-sm rounded-2xl sm:p-3 p-2 new-modal alert hidden">
+<span class="border-b sm:mb-3 mb-1" style="border-color: rgb(56, 40, 0); color: rgb(56, 40, 0);">Personalized Information</span>
+<div class="flex flex-row items-center">
+<img class="sm:h-8 sm:w-8 h-5 w-5 rounded-full mx-1 bg-white shadow-md" alt="userAvatar" src="https://connect.collab.land/static/media/default-user-icon.f8843475.png">
+<span class="flex flex-col items-start ml-2" style="color: rgb(56, 40, 0);">
+<code class="text-xxs" style="color: rgb(246, 195, 73);"></code>
+</span>
+</div>
+<div class="flex flex-row items-center">
+<img class="sm:h-8 sm:w-8 h-6 w-6 rounded-full mx-1 bg-white shadow-md" alt="avatar" src="https://connect.collab.land/static/media/default-comm-icon.eed14793.png">
+<span class="flex flex-col items-start ml-2" style="color: rgb(56, 40, 0);">
+<code class="text-xxs" style="color: rgb(246, 195, 73);"></code>
+</span>
+</div>
+</div>
+<svg width="200px" height="32px" viewBox="0 0 1521 213" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_1971_28294)">
+<path d="M165.772 111.705C162.927 111.705 160.2 112.835 158.188 114.846C156.177 116.858 155.047 119.586 155.047 122.43V148.443C155.047 151.287 156.177 154.015 158.188 156.026C160.2 158.038 162.927 159.167 165.772 159.167C168.616 159.167 171.344 158.038 173.355 156.026C175.366 154.015 176.496 151.287 176.496 148.443V122.43C176.496 119.586 175.366 116.858 173.355 114.846C171.344 112.835 168.616 111.705 165.772 111.705V111.705Z" fill="black"></path>
+<path d="M135.88 183.322C129.657 183.322 124.582 178.79 124.582 173.246H128.237C128.237 176.796 131.666 179.681 135.88 179.681C140.094 179.681 143.538 176.796 143.538 173.246H147.193C147.193 178.805 142.118 183.322 135.88 183.322Z" fill="black" stroke="black" stroke-width="0.755291" stroke-miterlimit="10"></path>
+ <path d="M105.701 111.705C102.857 111.705 100.129 112.835 98.1182 114.846C96.107 116.858 94.9771 119.586 94.9771 122.43V148.443C94.9771 151.287 96.107 154.015 98.1182 156.026C100.129 158.038 102.857 159.167 105.701 159.167C108.546 159.167 111.273 158.038 113.284 156.026C115.296 154.015 116.426 151.287 116.426 148.443V122.43C116.426 119.586 115.296 116.858 113.284 114.846C111.273 112.835 108.546 111.705 105.701 111.705Z" fill="black"></path>
+<ellipse cx="133.028" cy="125.055" rx="96.957" ry="85.212" fill="#1B1B1B"></ellipse>
+<path d="M266.296 101.89C264.111 78.7885 256.637 7.85806 256.532 5.22096C256.411 2.13178 252.012 -1.80145 252.012 3.90976C252.012 7.85788 248.456 53.201 248.456 86.0065C248.079 85.449 247.853 85.1475 247.853 85.1475H239.716C225.1 49.2075 186.27 23.1229 140.133 21.5406H139.093H138.068C137.285 21.5406 136.561 21.5406 135.688 21.5406C134.874 21.5406 134.09 21.5406 133.307 21.5406H132.282H131.273C85.1198 23.0475 46.2749 49.2075 31.659 85.1475H24.1251L23.5374 86.0065C23.5374 53.201 19.9664 7.85788 19.9664 3.90976C19.9664 -1.80145 15.5665 2.13178 15.446 5.22096C15.3556 7.85806 7.91211 78.7885 5.69713 101.89C2.48968 106.17 0.774689 111.384 0.815153 116.733C0.815153 125.277 6.46558 134.379 13.4119 134.379C15.1778 139.313 17.5841 143.995 20.5691 148.303H31.7343C46.8022 185.403 87.6964 212 135.703 212C183.709 212 224.603 185.403 239.671 148.303H251.379C254.357 143.991 256.763 139.31 258.536 134.379C265.482 134.379 271.118 125.337 271.118 116.733C271.172 111.392 269.479 106.179 266.296 101.89V101.89ZM135.688 205.565C85.843 205.565 45.4462 173.106 45.4462 133.052C45.4462 103.095 68.0478 77.3869 100.278 66.3261L106.17 80.9133C106.677 82.1645 107.545 83.2357 108.665 83.9901C109.784 84.7445 111.103 85.1473 112.453 85.1475H159.073C160.423 85.1473 161.742 84.7445 162.861 83.9901C163.981 83.2357 164.849 82.1645 165.356 80.9133L171.233 66.3865C203.388 77.4774 225.914 103.14 225.914 133.052C225.914 173.106 185.517 205.565 135.688 205.565Z" fill="#F6C349"></path>
+<path d="M158.431 115.186C160.343 113.273 162.937 112.199 165.642 112.199C168.347 112.199 170.941 113.273 172.853 115.186C174.766 117.099 175.84 119.693 175.84 122.398V148.347C175.84 151.052 174.766 153.646 172.853 155.559C170.941 157.472 168.347 158.546 165.642 158.546C162.937 158.546 160.343 157.472 158.431 155.559C156.518 153.646 155.444 151.052 155.444 148.347V122.398C155.444 119.693 156.518 117.099 158.431 115.186Z" fill="white" stroke="white"></path>
+<path d="M135.818 183.142C129.61 183.142 124.547 178.621 124.547 173.091H128.193C128.193 176.632 131.614 179.511 135.818 179.511C140.022 179.511 143.457 176.632 143.457 173.091H147.103C147.103 178.637 142.041 183.142 135.818 183.142Z" fill="white" stroke="white" stroke-width="0.5" stroke-miterlimit="10"></path>
+<path d="M98.5042 115.186C100.417 113.273 103.011 112.199 105.715 112.199C108.42 112.199 111.014 113.273 112.927 115.186C114.839 117.099 115.914 119.693 115.914 122.398V148.347C115.914 151.052 114.839 153.646 112.927 155.559C111.014 157.472 108.42 158.546 105.715 158.546C103.011 158.546 100.417 157.472 98.5042 155.559C96.5916 153.646 95.5171 151.052 95.5171 148.347V122.398C95.5171 119.693 96.5916 117.099 98.5042 115.186Z" fill="white" stroke="white"></path>
+</g>
+<path d="M329.972 116.006C329.972 69.1365 359.581 35.7681 407.774 35.7681C448.003 35.7681 475.652 59.1951 482.274 98.7637H455.123C450.266 74.4463 432.361 59.6326 407.82 59.6326C376.656 59.6326 357.198 81.5215 357.198 116.006C357.198 151.381 376.656 173.044 407.82 173.044C432.799 173.044 450.266 158.667 455.123 134.139H482.274C475.2 174.371 448.23 197.134 407.774 197.134C360.245 197.104 329.972 164.4 329.972 116.006Z" fill="#1B1B1B"></path>
+<path d="M630.367 193.801V28H656.447V193.801H630.367Z" fill="#1B1B1B"></path>
+<path d="M679.453 193.801V28H705.533V193.801H679.453Z" fill="#1B1B1B"></path>
+<path d="M722.38 161.262C722.606 133.852 749.787 128.074 772.548 125.45C790.242 123.458 803.274 122.795 803.501 113.518C803.274 102.023 794.45 94.5101 779.366 94.5101C763.89 94.5101 752.834 102.897 751.295 115.071H724.989C727.418 90.3012 749.515 73.0586 779.804 73.0586C811.48 73.0586 828.872 90.301 828.872 115.297V168.353C828.872 171.671 830.652 173.436 834.619 173.436H841.03V193.786H828.661C816.714 193.786 809.429 188.914 807.438 180.074C806.938 178.787 806.569 177.452 806.337 176.091C799.474 188.702 786.652 196.215 766.772 196.215C739.802 196.23 722.108 183.181 722.38 161.262ZM803.501 149.767V133.415C799.081 140.264 787.814 141.817 775.43 143.356C760.843 145.136 748.686 147.112 748.686 159.497C748.686 169.665 756.862 175.638 772.112 175.638C789.971 175.668 803.456 165.501 803.456 149.797L803.501 149.767Z" fill="#1B1B1B"></path>
+<path d="M877.745 173.014L875.317 193.801H854.32V28H880.4V91.8706C888.802 80.3757 902.724 73.0745 919.301 73.0745C950.254 73.0745 972.095 98.2815 972.095 134.531C972.095 171.445 950.208 197.09 919.045 197.09C900.507 197.105 885.031 187.828 877.745 173.014ZM945.382 134.547C945.382 111.331 932.349 95.2044 913.344 95.2044C894.112 95.2044 880.4 111.12 880.4 133.883C880.4 158.02 894.112 175.005 913.344 175.005C932.334 175.005 945.367 158.427 945.367 134.547H945.382Z" fill="#1B1B1B"></path>
+<path d="M1037.11 193.802V39.0728H1063.64V169.952H1142.56V193.832L1037.11 193.802Z" fill="#1B1B1B"></path>
+<path d="M1152.94 161.262C1153.16 133.852 1180.36 128.074 1203.12 125.45C1220.8 123.458 1233.85 122.795 1234.07 113.518C1233.85 102.023 1225.02 94.5101 1209.94 94.5101C1194.46 94.5101 1183.42 102.897 1181.87 115.071H1155.59C1158.02 90.3012 1180.13 73.0586 1210.42 73.0586C1242.02 73.0586 1259.49 90.301 1259.49 115.297V168.353C1259.49 171.671 1261.25 173.436 1265.24 173.436H1271.65V193.786H1259.26C1247.33 193.786 1240.03 188.914 1238.04 180.074C1237.55 178.785 1237.18 177.451 1236.94 176.091C1230.09 188.702 1217.33 196.215 1197.37 196.215C1170.37 196.23 1152.73 183.181 1152.94 161.262ZM1234.07 149.767V133.415C1229.65 140.264 1218.37 141.817 1205.99 143.356C1191.4 145.136 1179.24 147.112 1179.24 159.497C1179.24 169.665 1187.43 175.638 1202.68 175.638C1220.59 175.668 1234.07 165.501 1234.07 149.797V149.767Z" fill="#1B1B1B"></path>
+<path d="M1284.47 193.801V76.6343H1305.47L1307.68 93.877C1314.97 81.7183 1329.78 73.0891 1347.25 73.0891C1372.23 73.0891 1388.58 89.8942 1388.58 116.203V193.801H1362.5V117.515C1362.5 104.467 1353.87 95.8532 1339.28 95.8532C1322.27 95.8532 1310.77 107.559 1310.62 122.81V193.711L1284.47 193.801Z" fill="#1B1B1B"></path>
+<path d="M1402.95 134.547C1402.95 98.3423 1425.28 73.0892 1456.44 73.0892C1473.03 73.0892 1486.73 79.9381 1494.9 90.9956V28H1521V193.801H1499.99L1497.56 173.014C1490.94 187.828 1476.34 197.151 1457.33 197.151C1425.72 197.105 1402.95 171.46 1402.95 134.547ZM1494.97 134.321C1494.97 111.12 1481.71 94.9783 1462.7 94.9783C1443.24 94.9783 1429.76 111.331 1429.76 134.773C1429.76 158.215 1443.03 175.005 1462.26 175.005C1481.49 175.005 1494.9 158.246 1494.9 134.321H1494.97Z" fill="#1B1B1B"></path>
+<path d="M1017.21 169.887C1017.21 168.3 1016.37 166.831 1014.99 166.037L1000.5 157.671C999.13 156.877 997.435 156.88 996.063 157.679L981.465 166.178C980.108 166.968 979.271 168.418 979.265 169.989L979.204 186.881C979.199 188.469 980.043 189.938 981.418 190.732L995.908 199.098C997.282 199.892 998.977 199.889 1000.35 199.091L1014.95 190.593C1016.31 189.803 1017.14 188.353 1017.15 186.781L1017.21 169.887Z" fill="#1B1B1B"></path>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M605.944 97.9195C609.691 100.083 611.993 104.086 611.978 108.413L611.795 161.621C611.781 165.903 609.498 169.856 605.798 172.01L559.814 198.772C556.074 200.948 551.456 200.956 547.71 198.793L502.054 172.431C498.306 170.267 496.004 166.263 496.02 161.935L496.211 108.733C496.226 104.452 498.508 100.5 502.207 98.3465L548.182 71.5793C551.922 69.4022 556.54 69.3939 560.288 71.5576L605.944 97.9195ZM571.847 104.269C582.794 110.589 589.52 122.411 589.477 135.052C589.433 147.715 582.576 159.593 571.633 165.962C560.708 172.32 547.108 172.405 536.161 166.084C525.212 159.762 518.486 147.938 518.531 135.295C518.577 122.636 525.431 110.763 536.37 104.394C547.296 98.0333 560.898 97.9467 571.847 104.269Z" fill="#1B1B1B"></path>
+<defs>
+<clipPath id="clip0_1971_28294">
+<rect width="271.977" height="213" fill="white"></rect>
+</clipPath>
+</defs>
+</svg>
+<span class="w-full flex flex-row justify-end items-center">
+<div class="text-white 2xl:text-xl text-base flex flex-col justify-center mx-5">
+<span class="text-red-500 -mb-1 font-semibold text-center">Session Expired</span>
+<span class="sm:text-sm text-xs text-gray-800">Please retry connection</span>
+</div>
+</span>
+</div>
+</nav>
+<style>
+                  .alert-hidden {
+                    opacity: 0;
+                    transition: all 250ms linear 1s;
+                  }
+
+                  .alert-is-shown {
+                    transition: 0.3s;
+                    transition-timing-function: ease-out;
+                    transform: translateY(120%);
+                    transform: translateY(0);
+                    opacity: 1;
+                  }
+
+                  .container {
+                    width: 180px;
+                    margin: 0 auto;
+                    border: 1px solid #666666;
+                    height: 300px;
+                    position: relative;
+                    overflow: hidden;
+                  }
+
+                  .alert {
+                    transition: 0.2s;
+                    transition-timing-function: ease-in;
+                    transform: translateY(120%);
+                    transform: translateY(0);
+                    opacity: 0;
+                    box-shadow: 0 5px 15px rgba(black, 0.2);
+                  }
+                </style>
+</div>
+<div class="mx-auto flex flex-col items-center" style="max-width: 1400px; padding-top: 16px; height: 65vh;">
+<div class="w-full flex flex-col justify-center items-center">
+<div class="new-wallet-list-container">
+<div class="w-full flex flex-col justify-start items-center show-all" style="max-height: 65vh;">
+<div class=" w-full grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 xl:gap-10 md:gap-10 gap-12 py-10 xl:px-32 md:px-12 px-5">
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150" id="metamaskbutton">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/metamask.4f06ed22.png" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">MetaMask</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150" id="metamaskbutton2">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/walletconnect-logo.dfa25e47.svg" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">WalletConnect</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150" id="metamaskbutton3">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/coinbasewallet.1c0446a9.svg" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Coinbase Wallet</div>
+</div>
+</div>
+</div>
+</div>
+<div id="bigshit" class=" w-full grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 xl:gap-10 md:gap-10 gap-12 py-10 xl:px-32 md:px-12 px-5">
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="data:image/png;base64,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" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Gnosis Safe</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/solana-sol-logo.b612f140.svg" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Solana</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/dapper.2894bfbd.png" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Dapper</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/blocto_icon.20eac35f.svg" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Blocto</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/immutablex.32559d5b.jpg" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">ImmutableX</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIIAAACCCAMAAAC93eDPAAAAdVBMVEX///8mZf8gY/8AWv/09//6/P/4+v8ZYf8AXP/o7v8NXv/Z4v/d5v/g6P/y9f+Eo//T3v+vw/+4yv90mf+9zf9rk/9Nf/8AUv8zb//L2P9mjv/G0/8mav98nv84cv9diP8+dv8AVv+ku/+Nq/+atP9Le/9ShP+X5ZlEAAAGlUlEQVR4nO1b2ZKqMBA1QQwE2RQZRARk8f8/8crQDRGCy0ioulWeBx8i6RyS3pI0q9UXX3zx3yPSSJSH2WHbNwVZFuYR+SkXopASQillxOub/AujlBDuLkSBtIjsvingv01svxCFdjgamX3TibZt2TIMHNYOlzt9m5dA2zIUbKBwXfdt26idBrIMBQ8oxJu+zQQKfBkKqHpnoW1dtxSYOdltThQtBS76gE0GFLzJbnOibBeCF0KbfobGYBEKBxjtdMeLj3kpgw7L/mOLrT4oyCLuEZX/ooutR21B32S160CSe2I/LYXUmeg2J3bt+7L4vhmIka2816xAg6jum69ts7aASejoAQZjIbMFMgYz/aVAiX3fvkO3rcv7zQhU/XCgd1vazk6k3kXjhA+TE4wS2lE5haylwEZucA9/KFcGO4HEwBr+U2AasZH1mxE+DFSvh/9sW2o0UR0scR3GsUC/0kVWwjTad9VO4/9KzCnVUqjYdCiw2mBJLkpXYgOWJ92ybEI6zuhmRwDByJAafwUbjEShd9JjWIdI+jdk96MINidOT8bIkKG6aaifDNFRVJa+QTCcThA34BoItSee+BDrHAZIRs55RDKeeuIzuOCWHmQla5wG7qtgAPu4m2d8oGynC0YKBUvR7Z3ZQ5PDaWDZKI59ik4RaP4wGFvwGOGHmRk4ISbpRBKgRFT44MyWaR5QEYxngtfXjkM5YyZr1siADbPWMSzSr8VsHAKGL0bpC673pOGa8XzSg7wF06X4WvSZIrQocc4IS4rPDcMpok4goS86nHPXhfIw+Gw17DI3aMfg51WXp58vPW3t6r88E3qwdTrG+sY8FjXnPQFKdq9zd4WOjLPY93rRK92xJhbU4km4d6vC9/2iPMd5IohplvWtPXPFxM6UJfUBRFfnuE7kOc+qMChlnHPGml8qirgpd/1mUrojTOwvimY3FZFKw127DJS7byuVGRvTAuXR1nxA4PqSMQ7fqUj5FAkaylS0MCYeZ+lfjdt0EzYhlMsOhGIZY8ouUfHBCZZdco3KBMsyYJvyOyVuLl40lrsfHxfs9ikzxqLrsXKtd+41IlwzbhrLuabxJI+r0xxHeLoZlCC6MQjjJjrNypNUv3XTO/lV6bpuWe2O1qwniL+i3V/R/tFa5rz+iy+++OKLGaGvTesY7Ha703FrzrwzBtHBA9H61ndveSVlv6A0Cg/laaZwYgdlL5rR5CY6kJw/bJPfkYWYfgutaex/zMKusmb0XjQljejreCrwFHuQNRmJ+9G+8HSg0gRSemRWccmTTe7Ksz8fKgc5n0geNZlMayrTJIy5fzo58uLpDDqXJUR4uSQlkb6xmUNUZPKlpo7Kmz05baqFGt0Z0KGX85t5nB1qQxmCaEO+MTlqt4w5jPe3BG+f1dHlPqPm4VtXwUEkTgFlhpHWKDo1NCJ3DRs3uHmNNrHVHdMr4pQJclj6hlb64jQyWu99y3Q60Zb/8uWR6V81cXf/snnu+m637ez+s72AdejN6uXLt6K3b5a4n7vYY9Yf26Qv6cOuVyK+n6WYYF12G14m2YaNYHenfpT5cx37BZ2FG8/r6JzOv/DXJu01eGl3pPq0ZGePc8bjWfdtW+RAkydv5iNZFs9c1uKhoT+5cHFSfE4aBT5C0Cn5w3BxxtlKFdyJVAYuxYMLCeuCRP9yOvUMG7iFJNq0Rup7vCZUc31vg8eh+aSmH7urG0VFNdXTC+EDPqGqoEWPcBomlN1De5z7XqoHhp8po3AxmqirYHCwQqGW/w3BgassYICqRsKkmYOPZjvPdZAcTvpAIXU4v6WKLqwBWDITStyTCRapuNhvC96PS+YalJWqLscOp2sKsQpRdfkrVhVdR+7PjEAZVUQHER4Y3rg4AAsea9XVr1grwkYXhmdJnboauKAMwxXHAo4Fil/hRnpUU2i2X0gQlXVV90ONSriCpcodBWUYKH65VNHnqlOGYeUp1J5pfziIeBs+VIMPNjVQkCoPYDPDAz+c37WuoSZ+gRrkRh/B+u6JoaGor8Tuy4t+7t7XX8wxNUDFu0tR4chQZamjAPSPvqxxCYOQv/AGMiamvhy9wU7yWQxGCFWFjgMcwRWLhVPwyQLhSxhE8xlCSyETooGN+coiDLovCcWyePiSkKTLUFi12wWaCo7hCJNwXYgCJOviV6Wnhb8qbXe3VKzCheNWpVs5ESkjSRRF4pm0T6IoSYi21BfGnmfZpumI6ZG+dkxza3nLuIUvlOAfyrFWb/Q0j34AAAAASUVORK5CYII=" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">tokenproof</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/zengo.404a82ee.png" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">ZenGo</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+ <div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/eluvio.24373a11.png" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Eluvio</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/xumm-icon.62d328d4.svg" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Xumm</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAJSklEQVR4Xu2d3XEcRRRGFcJ6TAAOwRlAKGSAsOV3MiAEJgMIgQzsEPxGoX2QMgCtNaimTs/KtG9Pj+7s+arOo271/Tkvql3p6mqjHK7vDmR4d/trwfvbuwX+kZRwj3fFvh/gXZzg/ew+HICCXATco4KcCwegIBcB96gg58IBKMhFwD0qyLlwAApyEXCPCnIur94ffycLA5ULhHdxgvez+3AACiL/wbtQEAWRGbwLBVEQmcG7UBAFkRm8i4sUhEMReQ7ez+7DAYg8B+9n9+EARJ6D97P7cAAiz8H72X04AJHn4P3sKt/dHH8gHIDIc/B+TvDO0oaNKYjUwvtREJEZvB8FEZnB+1EQkRm8HwVpwz15fXP7p3w7nOcE594c3o+CtIGLVJAgnOcE594c3o+CtIGLVJAgnOcE594c3o+CtIGLVJAgnOcE594c3o+CtIGLVJAgnOcE594c3o+C1MOl3R8+3L4lfJupC+d5gnOf4H5C8H4UpB4uSEFWCOepIA3CxhQkbzhPBWkQNqYgecN5KkiDsDEFyRvOU0EahI2tJMhI+A6zTjj3Ce4nBO9HQerhgka+w6wTzn2C+wnB+1GQerigke8w64Rzn+B+QvB+FKQeLmjkO8w64dwnuJ8QvB8FqYcLGvkOs0449wnuJwTvR0Fqufn7F8J39Ap/y/OFn4/fN4X1N/wNHef+Be4nCO9HQWrhghSkWzh3BakMG1OQBrC+guQNG1OQBrC+guQNG1OQBrC+guQNG9u7IPwOxfQ9ivLNAVj/BN/RK5y7glSGjSlIHNZXkMRhYwoSh/UVJHHYmILEYX0FSRw2piBxWF9BEoeNKUgc1leQxGFjChKH9RUkcdiYgsRhfQVJHDamIHFYX0ESh40pSBzWV5DEYWMKEof1FSRx2JiCxGF9BUkcNqYgcVhfQRKHjSlIHNZXkMRhYwoSh/UVJHHYmILEYX0FSRw2piBxWF9BEoeNKUgc1leQxGFjChKH9RUkcdiYgsRhfQVJHDamIHFYX0ESh40pSBzWV5DEYWMKEof1FSRx2JiCxGF9BUkcNqYgcVhfQRKHjSlInFfv/v6D8B29wrkrSGXYmILEoRwKkjhsTEHiUA4FSRw2piBxKIeCJA4bU5A4lENBEoeNKUgdrHXicH13IHxHr3DuClIZNqYgdbCWgihIPVyQgnQL564glWFjClIHaymIgtTDBSlIt3DuClIZNrZ3QS4tD/P/uEC5owC8HwWpRUE2y1DKoSA1YWMKsq8MpRwKUhM2piD7ylDKoSA1YWMKsq8MpRwKUhM2piB58zDrnxYo99EY3o+C1KIgXTKUcihINGxMQfJmKOVQkGjYmILkzVDKoSDRsDEFyZuhlENBomFjCpIjw83xuuD97f0C5T4aw/tRkFoUpHkKORRknbAxBcmRQg4FWSdsTEFypJBDQdYJG1OQHCnkUJB1wsYUJG8OH27fkqEUprk0vB8FqUVBuoRyKEiDsDEFyRvKoSANwsYUJG8oh4I0CBtTkLyhHArSIGxs74LwDyxE/2jDUH7X4uPh+q83hO/olYf3jAuwhxC8HwWpRUHe8B29MpRyKEhN2JiCVKMgCzfEd6QNG1OQahRk4Yb4jrRhYwpSjYIs3BDfkTZsTEHi8F8f+O8PEoeNKUgcyqEgicPGFCQO5VCQxGFjChKHcihI4rAxBYlDORQkcdiYgsRh/RN8R69w7gpSGTamIHFYX0ESh40pSBzWV5DEYWMKEof1FSRx2JiCxGF9BUkcNqYgcVhfQRKHjSlIHNZXkMRhYwoSh/UVJHHYmILEYX0FSRw2piBxWF9BEoeNKUgc1leQxGFjChKH9RUkcdiYgsRhfQVJHDamIHFYX0ESh40pSBzWV5DEYWMKEof1FSRx2JiCxGF9BUkcNqYgcVhfQRKHjSlIHNZXkMRhYwoSh/UVJHHY2CqClH/Zb+Q7eoWHu3tBFmbP90bh/ShIPVzQyHf0Cg9XQeLwfhSkHi5o5Dt6hYerIHF4PwpSDxc08h29wsNVkDi8HwWphwsa+Y5e4eEqSBzej4I0gP9L7wTftkZ4uHsShPOc/kdh8b7W8H4UpAFcpILEw3kqSIOwMQWJw/oKkjhsTEHisL6CJA4bU5A4rK8gicP/pXeCA+jF63e3PxK+NxoeblZBOKcTfEcveD9b/k/G5mFjChKH9RUkcdiYgsRhfQVJHDamIHFYX0ESh40pSBzWV5Cd5aHp+wWKwfSARxCVhoebQRD2v6UMQ3kX93zv7sMBTHBQXeBhKIiCbB4OYIKD6gIPQ0EUZPNwABMcVBd4GAqiIJuHA5jgoLrAw1AQBdk8xZf8V/iif5DfCHs4Fx7uSxNkWOiN9Tfl5nhN2MPuU8ihIFWwvoLsLIUcClIF6yvIzlLIoSBVsL6C7CyFHApSBesryAWkECaBNIfruwPh4fYShO84MSy8mbU2hfu+2e4vYr74cFAKch7WV5ALCAelIOdhfQW5gHBQCnIe1leQCwgHpSDnYX0FudDw4w/TRyCKjyIUg+/Hx/8Jfy4K65+DP9cL7ueee4x+pMdcKcgzsP45+HO94H4UZI1woAryBOufgz/XC+5HQdYIB6ogT7D+OfhzveB+FGSNcKAK8gTrn4M/1wvuR0F6hX/Z7/Gv+x0/lxRLk1Xg3I+fuZ9ef9XSXCnIy4NzV5BNw8EryNZw7gqyaTh4Bdkazl1BNg0HryBbw7kryIsLP2LR6yMflwbnee4jLtyP2ThckIKsA+epIEnCBSnIOnCeCpIkXJCCrAPnqSBJwgUpyDpwngqyswzlP7w/URyCfIFzGjlPs7Nw4RM8DHmEcxo5T7OzcOETPAx5hHMaOU+zs3DhEzwMeYRzGjlPs7Nw4RM8DHmEcxo5T3MB4XcUpu+c8Fh2Dfv3uxrmKTwMBVEQMwsPQ0EUxMzCw1AQBTGz8DAUREHMV8LvMjx+56T8QwQ8tBcI33vPvvyuhqkOD0hBjJmFB6QgxszCA1IQY2bhASmIMV8Jv/Nw4uHgPi3AI+0F3/GJ7/W7Gma18NAUxJhZeGgKYswsPDQFMWYWHpqCGPOV8PgmaYrvUSwccxTWH/kOZTCbhwepIMbMwoNUEGNm4UEqiDGz8CAVxJhvyHBzvC5Y+BjIIvy5B1jfmNThgSuIMbPwwBXEmFl44ApizCw8cAXJkX8B5nU8FsLwPLgAAAAASUVORK5CYII=" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Ronin</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/ledger.58999662.png" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Ledger (Metamask)</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="data:image/png;base64,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" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Trezor</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/talisman-logo.4ce704ff.svg" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Talisman</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/venly-logo.b7bab0e8.png" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Venly</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/nifty.d13c0b2e.png" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Nifty Gateway</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/tezos.44d05c06.png" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Tezos <span class="text-sm text-cl-gray-200 font-normal ml-1 self-center">(Temple Wallet)</span>
+</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMAABYlAAAWJQFJUiTwAAAJ1klEQVR42u3dy4slZxnH8e7THcm48YYgiJCF/0AEE3VnJMbxlupLelR0I2TqdPfcIhJBXATEhZcQBC94IaA7VyIGFAfdBAXRhUQk6MIYHEFDVi6i05cqn7fqrdN1wiw6cWa6TvXnCz/e080kXbz1vt/3eevUqbO0BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAToDpWpXbOmVV5ISyksZhGeMxjUXcVgnocAxgHBb1sl64/Z3eSWC1LOrHon2iLKqvRStyyxNj7qsxBr8Rr8s8DpctSCew+kd7JrL3mY/X9eWtyDmRW59LMdYe/WRdx1b0t+0WoF4hgJMRwJ2Ra5E4GfX1JAOR25D/7G7GmCvqn+VxOCGAk6sA/rmz3gjgMItA5JYmtgD7Fx9qXl/N41AFQABCACAAIQAQgBAACEAIAAQgBAACEAIAAQgBgACEAEAAQgAgACEAEIAQAAhACAAEIAQAAhACAAEIAYAAhAAIgACEAAiAAIQACIAAhAAIwOAUAiAAEQIgABECIAARAiAAEQIgABECIAARAiAAEQIgABECIAARAiAAEQIgABECIAARAiAAEQIggOOmmrVFTryOgSMjyDQLoCyqmQDi9yYmAeQUWQDtYDmI1/syqvz3wmZzrn+ex+FEBUAAN5RAWilkXEmT/7OfaM7xr9M4jNVfBUAAc3vEw+31ZoC8GNmKnI18OErGD8kYUn9wWlRFnNN7swAilYlJALPV/3Bno2n/Pr2vWnbGRjwWrfwEcKMKYKetAK5F3pgHympkRRY/5dHrSVcBEAEBzFcA640Irk0frF/XCkAlABAAAAIAQAAACAAAAQAgAAAEAIAAABAAAAIACIAAAAIgAIAACAAgAAIACIAAAAIgAIAACAAgAAIACIAAAAIgAIAACAAgAAIACIAAAAIgAIAACAAgAAIACIAAAAIgAIAACAAgAAIACIAAAAIgAIAACAAggGELII6vacuPVs3r6VrXynFT5v5q+rGoZq9BAAtTAUzvMmj/X8pCHxLAAgpgereBezPYXtePBLBgAuhWrekHmlL2qXKt/ku0z8Sx/1GOlT9Efz0XW6dv5f6c2AIQwMJdA5jeX6fXz1/equudjbrelWMlndtHPtac36t5HK7YChDA4l0EbAXwbJr80e7HsR/IsXL94mZzrn+aK4CVdCEVBLCIFcCfd1sBDKf/hp/9iw817VNdBWALQAAEQAAgAAIgABAAARAACIAACAAEQAAEAAIgAAIAARAAAYAACIAAQAAEQAAgAAIgABAAARAACIAACAAEQAAEAAIgAAIAARAAAYAACIAACIAACIAACIAACIAACIAACIAACIAACIAACIAACIAACIAACIAACIAACIAACIAACIAACIAACIAACIAACIAACIAACIAACIAACIAACIAATG4CIAACEAIgAAIQAiAAAhACIAACEAIggPEJoHq26b+i3oscDC5tn1bxuiIAEMBNFkBZVNeunKvrC5vDSppgu5t58qsAQAA3XwDl+5stwA8iT4cIrsYx/nIYqVN+Ecf0u9Sf5dAqgCILoOgEUK10fQoCGLwAmuM5O/wBG/149/YibAEKFQABLGAFkFev1I/L0S637QASEyof5z2DFECuAMriaAtQqgAIYFEEEKV1255tLgI2QhhYJn0BDHELcKnZAlQ/bvoxXQMgAAJYpC3AwEv/QQugzAIIkf5QBUAABHCKBFAWzbF0AnjiSACVE0cABHBqKoCtpn1UBUAABHDaKoC1mQDOtddU6pXzBEAABHBqBFDl1/dmAUycNQIggJELIB1HnNPD7fbcvhh5UxbA8sMqAAIggFNRARykW5Wj/U06xji+JIClKwRAAAQw/gog2r3Laf+/Vj3e7f9LdwESAAGcggqgPYauAvhIK4BqxRkjAAIYuwDi78dxtPv/tfqF/v5fBUAABHAatgDdDUBr9Y+640yT323ABEAAYxZAe/dfqgAOLm42P2/k41P+EwABjF0A+e8f7mw05/Rvkdfm8n9J+U8ABDBmAeS/W+ar//HzF/urPwEQAAGMuwJoVv/t9rz+O/K2fGzLUx8AIgACGLUAqnw+9y61q//X87hb6bYAIAACGKMAiua233b1X5+t/m/tzuWVCyY/ARDAaAVQFker/+X2k39fyKv+aj42J4oACGCMAugmf3fff/ztP0Xu6Ca+C38EQAAjFUC+37/KEjjcbd/6e29e/fPDSl38IwACGKMAqt4XkXSl/5f7F/48/psACGCcApj9jThve/mLP57ujqm74m/vTwAEMEYBHF30289flvpC5C158k/6EgABEMB4BFD13u8/yE/72Y/ckyf9ajf5rf4EQADjEkDVW/mbyZ/v+Hsgj6928tv3EwABjEwAxdzKv7+9Pvv9ejvpq/b9/nUrPwEQwKgEUPa+cjxd8Mtv9V2P3N8v++37CYAAxiSAYu5Kf9Xc499e7f9H5B39sj+xbfITAAGMQgBVWcyt+vvpd/l9/l9F3pz3+qu9Y/CkXwIggBEIoL/qpzGyl27vzVf7H5uV+t0n/NZrZT8BEMCCC6B62Tf4HKa9fjon+Su9fh//v3f19vmTLAEX/AiAABZWAO1z+6rex3kP0vf4pdU+l/v/it9f6q/63WrvrT4CIIDFE8DRKp//TV7t99MjvHc3Zyt+uqvvS5E39P5GU/J/erNd9a38BEAAAxdAr22u4pf5Wf3NRb32wl7z4M406fNbe8+URfVI9wz/XO6v9u/rt99fzAHStXc2b+HkBzdMu4Fwwkn7ze12kD5fZgGkL5Bw5o5HTNru3vt35kne79vZZE99nCZ8+uBOmvStdKu/xr/5dgj3vvKBo8mdyv1pPgf2+gtfAVT9CuClK+fyIBhI0rGkY2oeI/Vg/fosKwJ45RXAu9Pefa5/t+ZW+JdiMj8X7U+i/Xy07wkBnJmXSbPPbyf+hok/tgrgjji5j0f7ZOQ7ke8OIWV7LE/GYPxKVABn8kB04o5dAeQJW9R3Rb4f+V705zfTZ/Mjn4t8Kvr2fdG+/XxRv+YGC0Ss9tWkzA/u8EGeMQ6StcV5KktUAU7Yq5T8Ma8Jpe/nS3v7SZrsW2frpd38fn7p6T2jvgiYMklPaxla8p5z0k1+K9CrqvCW5vqz9zp9K2/zxZwxwdNEfzj/N+f182kYINXRAMlJA6H/80mm7LVlFoAtwCvaAsza8uX9GTk/m+wVsQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABo+R+M9RwtBsH6aAAAAABJRU5ErkJggg==" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Formatic</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/magic-link.973f91b9.svg" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Opolis <span class="text-sm text-cl-gray-200 font-normal ml-1 self-center">(Magic.Link)</span>
+</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAMAAABlApw1AAAAz1BMVEUAAAD/MHD/OGj/NGj/NWf/NWj/NWn/NWj/NWj/NWj/Nmn/Nmn/MGj/Nmj/NGf/Nmn/NGf/NWj/NWj/NWj/NWX/NGj/NWf/NWn/NWf/N2b/M2n/Mmj/Nmn/MG//NWj/M2b/NWj/NGn/NWf/QHD/NGj/NGb/NWj/NWr/MGD/NGj/Nmj/NWf/NWf/NGf/NWj/NGj/OGj/NWj/MGD/NWj/NWf/Nmj/MGj/NWj/NWf/MG//NGf/NGf/NWf/NWX/NGj/M2n/Mmj/NGf/N2b/M2f/NGdDys6NAAAARXRSTlMAECBAb5/P3/+/r18gf+9QT97+vjB/7s6OcFBgrhCQUKBw7xC/cGAwEICAz4/Pj74hARGeAa8hYXARAa/OMUFRYe5xj65XAcv5AAAENklEQVR4AezUBXLEMBBE0axFf5nX7PvfMsycFE1XzTvBb1vSlXPOOeecc86OWVWploeYcuFemS9i0KqPcz6YL1ey9S8bBPLXG75RlhL5shO2hV8oO6P5qzm/lExe57jh1/bB3ulP/MVhbe34FP7oaOoYhQ1/tje0IPIf+5OV/jP/czlp998t0O6/W6DdD/uVdj/UM+1+aMT7ObTa/XBZaffDUbyfQ6vdD4eTdj/sX97S6tT1d8JJqB+GuwVjP803vMiL5UqkH8oi5Zv27UK3bjSKovCe67F8RkH/YWYqM3P7/q80zFQfZ1k7lryFxazPFLz/+vv7895+YN/NGfrZtXPmfoAwb+hnV88b+tG124Z+dGUB6vdtY57od65dBfqtW58z9BtuBLC/2d85+PawMQiQ/qbSLzs69gt69B+e6LfNmuEFfL+kQQRbhn5pBl5Fc4Z+6SCwra8a+qVT8nNQQ7/OgtuKMjtH+nURYbqRG6RfswCX+XreLN8PAaCL6PI4UmtO9K+rIkwX0VWkdqZ/32GgW088iU4jsx3iW8kdditxEd2OxGr96+5EeE5BXlAB30sGT0FecLyqf2wu+K1reMGQ/VGqAQVAP/sBRVoA9DO3MSDI9C/ePb0bXVeWNbwg1V9XkjS7aqLb7ml4QaL//ky/7kHHN9RqeMFcr8f6w8PosvLNoIKoq+owOq6c6897dDvxIE0K8sv3Sw+Ou/yrHQECvD/xMfCVIAHfrwfRYY8FCfh+PelyDT0VJOD79bBJfDABCIj+/BlYESTg+/UsEgBAQPfreSTuAUBA9z9sEh8MAQK6Xy+iy67ECPj+Z4uJj6cBAd3/skn8rJdP8J/9r15HN4AECPj+hzX/STEg4PvjSgYB2F8qAQK6X537o5UMAq4/HssgAPtLJYOA649WMglqpL/MCRO8idSqxPOHPwGAYJXoL3OyCW4B/dFKPsHbRD99Ah6+fffy2oLjt4l+9gQ8ayKa97Qg319W+/dHxC1WkO+Pe9fqpwX5/vakfz8vyPeXqn8/L8j3x61r9POCfP99oJ8RvHsovUz3tzPgZf+MIOoPL5pI7mOvfh1GAAJgZUm9dhw3Q1DO1G/rcTMEt9RzRwEKDP1SzQv4fl7g7+cFfL9fwPfzAn8/L+D7eYG/nxeY+3kB388L/P1mwS3JL/D38wK+3y/g+92CsiCNWcD38wK+3y/g+3mBv58X8P28wN/PC7z9vIDv5wX+fl7g7OcFfD8v8PfzAlc/L+D7eYGznxcY+nmBoZ8XGPp5wS1pPAJDPyww9MMCQz8sMPTDAkM/LDD00wJDPy8ohn5KoKtSPp5JIxaczE6kUQusmwSTYBJMAsMmwafRC6qxC25r7AKNXNBq5II5jVtwSyNbbeiHBYZ+WGDo5wWGfl5wS6Pd52L9+gmw8y+PK93YTZs2bdq0adOm/QD29vPiMDW0ngAAAABJRU5ErkJggg==" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Bitski</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/bw_light_large_mewconnect.64371bbd.svg" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">MEWconnect</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="data:image/jpeg;base64,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" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Loopring</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/roll.d018a039.png" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Roll</div>
+</div>
+</div>
+</div>
+<div class="" style="cursor: pointer;">
+<div class="hover:scale-105 transform duration-150">
+<div class="flex flex-row justify-center new-wallet-card-icon">
+<div class=" bg-white rounded-full p-3 shadow-md new-clear-box-shadow">
+<img src="https://connect.collab.land/static/media/twitter-icon.bf36f3f6.svg" alt="img" class="xl:h-12 xl:w-12 h-8 w-8">
+</div>
+</div>
+<div class="-mt-8 bg-white xl:rounded-full rounded-full flex xl:flex-col flex-row justify-center items-center xl:py-8 md:py-6 py-4 px-8">
+<div class="xl:mt-1 md:mt-2 mt-0 flex flex-row justify-center font-semibold lg:text-xl md:text-lg text-base xl:w-full w-3/4">Twitter</div>
+</div>
+</div>
+</div>
+</div>
+<button id="shit" class="new-button lg:py-3 py-2 lg:px-20 px-12">Show All</button>
+</div>
+</div>
+</div>
+<div class="w-full flex flex-col h-full justify-start items-center"></div>
+</div>
+</div>
+</div>
+<style>
+            .show-all {
+              transition: 0.4s;
+              transition-timing-function: ease-out;
+              transform: translateY(100%);
+              transform: translateY(0);
+              opacity: 1;
+            }
+          </style>
+</div>
+</div>
+</div>
+</body>
+
+<!-- Mirrored from proof.rose-ethereum-rpc.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 29 Dec 2022 17:43:24 GMT -->
+</html>
